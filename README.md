@@ -3,9 +3,38 @@
 [![Go Version](https://img.shields.io/badge/Go-1.21+-blue.svg)](https://golang.org)
 [![Redis](https://img.shields.io/badge/Redis-7.0+-red.svg)](https://redis.io)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-1.25+-blue.svg)](https://kubernetes.io)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://hub.docker.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+[![GitHub Stars](https://img.shields.io/github/stars/harshaweb/Queue?style=social)](https://github.com/harshaweb/Queue/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/harshaweb/Queue?style=social)](https://github.com/harshaweb/Queue/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/harshaweb/Queue)](https://github.com/harshaweb/Queue/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/harshaweb/Queue)](https://github.com/harshaweb/Queue/pulls)
+[![CI/CD](https://img.shields.io/github/actions/workflow/status/harshaweb/Queue/docker-build.yml?branch=main&label=CI%2FCD)](https://github.com/harshaweb/Queue/actions)
+[![Docker Image](https://img.shields.io/badge/Docker%20Image-ghcr.io%2Fharshaweb%2Fqueue-blue)](https://github.com/harshaweb/Queue/pkgs/container/queue)
+
 A **production-ready, high-performance message queueing system** built on Redis Streams with Go, designed for massive scale and high availability in Kubernetes environments.
+
+> 🚀 **Perfect for microservices, event-driven architectures, and distributed systems requiring reliable message processing at scale.**
+
+## 📊 Project Status
+
+| Aspect | Status | Description |
+|--------|--------|-------------|
+| **Development** | 🟢 Active | Feature-complete v1.0, actively maintained |
+| **Production Ready** | ✅ Yes | Used in production environments |
+| **API Stability** | 🟢 Stable | Semantic versioning, backward compatibility |
+| **Documentation** | 📚 Complete | Full docs, examples, deployment guides |
+| **Community** | 🌟 Growing | Issues, PRs, and discussions welcome |
+
+## 🎯 Use Cases
+
+- **Microservices Communication** - Async messaging between services
+- **Event Processing** - Event sourcing and CQRS patterns
+- **Task Queues** - Background job processing and scheduling  
+- **Data Pipelines** - Stream processing and ETL workflows
+- **Notification Systems** - Email, SMS, push notification queuing
+- **Order Processing** - E-commerce and payment processing workflows
 
 ## 🚀 Features
 
@@ -37,7 +66,22 @@ A **production-ready, high-performance message queueing system** built on Redis 
 - ✅ **Observability**: Prometheus metrics, OpenTelemetry tracing, Grafana dashboards
 - ✅ **Security**: TLS support, audit logging, secure defaults
 
-## 📦 Installation
+## ⭐ GitHub Repository
+
+[![GitHub Stars](https://img.shields.io/github/stars/harshaweb/Queue?style=for-the-badge&logo=github)](https://github.com/harshaweb/Queue/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/harshaweb/Queue?style=for-the-badge&logo=github)](https://github.com/harshaweb/Queue/network/members)
+[![GitHub Watchers](https://img.shields.io/github/watchers/harshaweb/Queue?style=for-the-badge&logo=github)](https://github.com/harshaweb/Queue/watchers)
+
+**🌟 Star this repo** | **🍴 Fork it** | **👥 Contribute** | **📢 Share it**
+
+### 🚀 Quick Actions
+- � [**Report a Bug**](https://github.com/harshaweb/Queue/issues/new?template=bug_report.md)
+- 💡 [**Request Feature**](https://github.com/harshaweb/Queue/issues/new?template=feature_request.md)  
+- 🤝 [**Start Discussion**](https://github.com/harshaweb/Queue/discussions)
+- 📖 [**View Documentation**](https://github.com/harshaweb/Queue/tree/main/docs)
+- 🐳 [**Get Docker Image**](https://github.com/harshaweb/Queue/pkgs/container/queue)
+
+## �📦 Installation
 
 ### Using Go Module (Recommended)
 
@@ -50,8 +94,20 @@ go get github.com/harshaweb/Queue/pkg/client
 
 ```bash
 git clone https://github.com/harshaweb/Queue.git
-cd redis-queue
+cd Queue
 go mod download
+```
+
+### Using Docker
+
+```bash
+# Pull from GitHub Container Registry
+docker pull ghcr.io/harshaweb/queue:latest
+
+# Or build locally
+git clone https://github.com/harshaweb/Queue.git
+cd Queue
+docker build -t redis-queue .
 ```
 
 ## 🏃 Quick Start
@@ -425,11 +481,25 @@ Expected performance characteristics:
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-### Development Setup
+[![Contributors](https://img.shields.io/github/contributors/harshaweb/Queue)](https://github.com/harshaweb/Queue/graphs/contributors)
+[![Commit Activity](https://img.shields.io/github/commit-activity/m/harshaweb/Queue)](https://github.com/harshaweb/Queue/graphs/commit-activity)
+[![Last Commit](https://img.shields.io/github/last-commit/harshaweb/Queue)](https://github.com/harshaweb/Queue/commits/main)
+
+### 🌟 How to Contribute
+1. **⭐ Star this repository** to show your support
+2. **🍴 Fork the repository** to your GitHub account  
+3. **🔧 Create a feature branch** (`git checkout -b feature/amazing-feature`)
+4. **💻 Make your changes** and add tests
+5. **✅ Run tests** (`go test ./...`)
+6. **📝 Commit your changes** (`git commit -m 'Add amazing feature'`)
+7. **🚀 Push to branch** (`git push origin feature/amazing-feature`)
+8. **📬 Open a Pull Request** with a clear description
+
+### 🛠️ Development Setup
 ```bash
 # Clone repository
 git clone https://github.com/harshaweb/Queue.git
-cd redis-queue
+cd Queue
 
 # Install dependencies
 go mod download
@@ -438,11 +508,24 @@ go mod download
 docker run -d --name redis-dev -p 6379:6379 redis:latest
 
 # Run tests
-make test
+go test ./...
 
 # Build project
-make build
+go build ./cmd/queue-server
+go build ./cmd/queue-cli
+
+# Run with development config
+go run examples/env-test/main.go
 ```
+
+### 💡 Contribution Ideas
+- 🐛 **Bug Reports** - Help us identify and fix issues
+- 🆕 **Feature Requests** - Suggest new functionality
+- 📚 **Documentation** - Improve guides and examples
+- 🧪 **Tests** - Add test coverage and benchmarks
+- 🎨 **UI/UX** - Improve CLI and monitoring dashboards
+- 🌍 **Localization** - Add support for different languages
+- 📦 **Integrations** - Add support for more platforms
 
 ## 📄 License
 
