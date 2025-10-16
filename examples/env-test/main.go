@@ -42,7 +42,7 @@ func main() {
 	if cfg.Database.MongoURL != "" {
 		fmt.Printf("  - MongoDB: %s\n", cfg.Database.MongoURL)
 	}
-	
+
 	fmt.Printf("Monitoring:\n")
 	fmt.Printf("  - Prometheus: %t (port %d)\n", cfg.Observability.PrometheusEnabled, cfg.Observability.PrometheusPort)
 	fmt.Printf("  - Tracing: %t\n", cfg.Observability.TracingEnabled)

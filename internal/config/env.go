@@ -14,20 +14,20 @@ import (
 func LoadEnv(filenames ...string) error {
 	// Default files to load
 	defaultFiles := []string{".env.local", ".env"}
-	
+
 	// Use provided filenames or defaults
 	files := filenames
 	if len(files) == 0 {
 		files = defaultFiles
 	}
-	
+
 	// Try to load each file (ignore errors for non-existent files)
 	for _, file := range files {
 		if err := godotenv.Load(file); err == nil {
 			fmt.Printf("Loaded environment from: %s\n", file)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -35,46 +35,46 @@ func LoadEnv(filenames ...string) error {
 type EnvConfig struct {
 	// Redis Configuration
 	Redis RedisEnvConfig `json:"redis"`
-	
+
 	// Server Configuration
 	Server ServerEnvConfig `json:"server"`
-	
+
 	// Security Configuration
 	Security SecurityEnvConfig `json:"security"`
-	
+
 	// Queue Configuration
 	Queue QueueEnvConfig `json:"queue"`
-	
+
 	// Database URLs
 	Database DatabaseEnvConfig `json:"database"`
-	
+
 	// Observability Configuration
 	Observability ObservabilityEnvConfig `json:"observability"`
-	
+
 	// Logging Configuration
 	Logging LoggingEnvConfig `json:"logging"`
-	
+
 	// Development Configuration
 	Development DevelopmentEnvConfig `json:"development"`
 }
 
 type RedisEnvConfig struct {
-	Addresses        []string      `json:"addresses"`
-	Password         string        `json:"password"`
-	DB               int           `json:"db"`
-	Username         string        `json:"username"`
-	ClusterEnabled   bool          `json:"cluster_enabled"`
-	TLSEnabled       bool          `json:"tls_enabled"`
-	TLSCertFile      string        `json:"tls_cert_file"`
-	TLSKeyFile       string        `json:"tls_key_file"`
-	TLSCAFile        string        `json:"tls_ca_file"`
-	TLSInsecure      bool          `json:"tls_insecure"`
-	MaxIdleConns     int           `json:"max_idle_conns"`
-	MaxActiveConns   int           `json:"max_active_conns"`
-	IdleTimeout      time.Duration `json:"idle_timeout"`
-	ConnectTimeout   time.Duration `json:"connect_timeout"`
-	ReadTimeout      time.Duration `json:"read_timeout"`
-	WriteTimeout     time.Duration `json:"write_timeout"`
+	Addresses      []string      `json:"addresses"`
+	Password       string        `json:"password"`
+	DB             int           `json:"db"`
+	Username       string        `json:"username"`
+	ClusterEnabled bool          `json:"cluster_enabled"`
+	TLSEnabled     bool          `json:"tls_enabled"`
+	TLSCertFile    string        `json:"tls_cert_file"`
+	TLSKeyFile     string        `json:"tls_key_file"`
+	TLSCAFile      string        `json:"tls_ca_file"`
+	TLSInsecure    bool          `json:"tls_insecure"`
+	MaxIdleConns   int           `json:"max_idle_conns"`
+	MaxActiveConns int           `json:"max_active_conns"`
+	IdleTimeout    time.Duration `json:"idle_timeout"`
+	ConnectTimeout time.Duration `json:"connect_timeout"`
+	ReadTimeout    time.Duration `json:"read_timeout"`
+	WriteTimeout   time.Duration `json:"write_timeout"`
 }
 
 type ServerEnvConfig struct {
@@ -87,13 +87,13 @@ type ServerEnvConfig struct {
 }
 
 type SecurityEnvConfig struct {
-	JWTSecret           string   `json:"jwt_secret"`
-	APIKeys             []string `json:"api_keys"`
-	JWTExpiry           time.Duration `json:"jwt_expiry"`
-	CORSAllowedOrigins  []string `json:"cors_allowed_origins"`
-	TLSEnabled          bool     `json:"tls_enabled"`
-	TLSCertFile         string   `json:"tls_cert_file"`
-	TLSKeyFile          string   `json:"tls_key_file"`
+	JWTSecret          string        `json:"jwt_secret"`
+	APIKeys            []string      `json:"api_keys"`
+	JWTExpiry          time.Duration `json:"jwt_expiry"`
+	CORSAllowedOrigins []string      `json:"cors_allowed_origins"`
+	TLSEnabled         bool          `json:"tls_enabled"`
+	TLSCertFile        string        `json:"tls_cert_file"`
+	TLSKeyFile         string        `json:"tls_key_file"`
 }
 
 type QueueEnvConfig struct {
@@ -144,47 +144,47 @@ type ObservabilityEnvConfig struct {
 }
 
 type LoggingEnvConfig struct {
-	Level       string `json:"level"`
-	Format      string `json:"format"`
-	FilePath    string `json:"file_path"`
-	MaxSize     string `json:"max_size"`
-	MaxBackups  int    `json:"max_backups"`
-	MaxAge      int    `json:"max_age"`
-	Compress    bool   `json:"compress"`
+	Level      string `json:"level"`
+	Format     string `json:"format"`
+	FilePath   string `json:"file_path"`
+	MaxSize    string `json:"max_size"`
+	MaxBackups int    `json:"max_backups"`
+	MaxAge     int    `json:"max_age"`
+	Compress   bool   `json:"compress"`
 }
 
 type DevelopmentEnvConfig struct {
-	Environment      string `json:"environment"`
-	Debug            bool   `json:"debug"`
-	TestRedisURL     string `json:"test_redis_url"`
-	TestDatabaseURL  string `json:"test_database_url"`
-	EnablePprof      bool   `json:"enable_pprof"`
-	PprofPort        int    `json:"pprof_port"`
+	Environment     string `json:"environment"`
+	Debug           bool   `json:"debug"`
+	TestRedisURL    string `json:"test_redis_url"`
+	TestDatabaseURL string `json:"test_database_url"`
+	EnablePprof     bool   `json:"enable_pprof"`
+	PprofPort       int    `json:"pprof_port"`
 }
 
 // LoadConfig loads configuration from environment variables
 func LoadConfig() (*EnvConfig, error) {
 	// Load .env files
 	LoadEnv()
-	
+
 	config := &EnvConfig{
 		Redis: RedisEnvConfig{
-			Addresses:        getStringSlice("REDIS_ADDRESSES", []string{"localhost:6379"}),
-			Password:         getEnv("REDIS_PASSWORD", ""),
-			DB:               getEnvInt("REDIS_DB", 0),
-			Username:         getEnv("REDIS_USERNAME", ""),
-			ClusterEnabled:   getEnvBool("REDIS_CLUSTER_ENABLED", false),
-			TLSEnabled:       getEnvBool("REDIS_TLS_ENABLED", false),
-			TLSCertFile:      getEnv("REDIS_TLS_CERT_FILE", ""),
-			TLSKeyFile:       getEnv("REDIS_TLS_KEY_FILE", ""),
-			TLSCAFile:        getEnv("REDIS_TLS_CA_FILE", ""),
-			TLSInsecure:      getEnvBool("REDIS_TLS_INSECURE", false),
-			MaxIdleConns:     getEnvInt("REDIS_MAX_IDLE_CONNS", 10),
-			MaxActiveConns:   getEnvInt("REDIS_MAX_ACTIVE_CONNS", 100),
-			IdleTimeout:      getEnvDuration("REDIS_IDLE_TIMEOUT", 300*time.Second),
-			ConnectTimeout:   getEnvDuration("REDIS_CONNECT_TIMEOUT", 5*time.Second),
-			ReadTimeout:      getEnvDuration("REDIS_READ_TIMEOUT", 3*time.Second),
-			WriteTimeout:     getEnvDuration("REDIS_WRITE_TIMEOUT", 3*time.Second),
+			Addresses:      getStringSlice("REDIS_ADDRESSES", []string{"localhost:6379"}),
+			Password:       getEnv("REDIS_PASSWORD", ""),
+			DB:             getEnvInt("REDIS_DB", 0),
+			Username:       getEnv("REDIS_USERNAME", ""),
+			ClusterEnabled: getEnvBool("REDIS_CLUSTER_ENABLED", false),
+			TLSEnabled:     getEnvBool("REDIS_TLS_ENABLED", false),
+			TLSCertFile:    getEnv("REDIS_TLS_CERT_FILE", ""),
+			TLSKeyFile:     getEnv("REDIS_TLS_KEY_FILE", ""),
+			TLSCAFile:      getEnv("REDIS_TLS_CA_FILE", ""),
+			TLSInsecure:    getEnvBool("REDIS_TLS_INSECURE", false),
+			MaxIdleConns:   getEnvInt("REDIS_MAX_IDLE_CONNS", 10),
+			MaxActiveConns: getEnvInt("REDIS_MAX_ACTIVE_CONNS", 100),
+			IdleTimeout:    getEnvDuration("REDIS_IDLE_TIMEOUT", 300*time.Second),
+			ConnectTimeout: getEnvDuration("REDIS_CONNECT_TIMEOUT", 5*time.Second),
+			ReadTimeout:    getEnvDuration("REDIS_READ_TIMEOUT", 3*time.Second),
+			WriteTimeout:   getEnvDuration("REDIS_WRITE_TIMEOUT", 3*time.Second),
 		},
 		Server: ServerEnvConfig{
 			Port:        getEnvInt("SERVER_PORT", 8080),
@@ -265,7 +265,7 @@ func LoadConfig() (*EnvConfig, error) {
 			PprofPort:       getEnvInt("PPROF_PORT", 6060),
 		},
 	}
-	
+
 	return config, nil
 }
 
@@ -323,30 +323,30 @@ func getStringSlice(key string, defaultValue []string) []string {
 // ValidateConfig validates the loaded configuration
 func (c *EnvConfig) ValidateConfig() error {
 	errors := []string{}
-	
+
 	// Validate Redis configuration
 	if len(c.Redis.Addresses) == 0 {
 		errors = append(errors, "REDIS_ADDRESSES is required")
 	}
-	
+
 	// Validate server configuration
 	if c.Server.Port <= 0 || c.Server.Port > 65535 {
 		errors = append(errors, "SERVER_PORT must be between 1 and 65535")
 	}
-	
+
 	// Validate security configuration
 	if c.Security.JWTSecret == "change-this-secret-key" {
 		errors = append(errors, "JWT_SECRET must be changed from default value")
 	}
-	
+
 	if len(c.Security.JWTSecret) < 32 {
 		errors = append(errors, "JWT_SECRET must be at least 32 characters long")
 	}
-	
+
 	if len(errors) > 0 {
 		return fmt.Errorf("configuration validation failed: %s", strings.Join(errors, "; "))
 	}
-	
+
 	return nil
 }
 

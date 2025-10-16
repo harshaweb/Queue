@@ -419,20 +419,20 @@ func main() {
 		config.Server.MetricsPort = envConfig.Server.MetricsPort
 		config.Server.Timeout = envConfig.Server.Timeout
 		config.Server.EnableAuth = envConfig.Server.EnableAuth
-		
+
 		config.Redis.Addresses = envConfig.Redis.Addresses
 		config.Redis.Password = envConfig.Redis.Password
 		config.Redis.DB = envConfig.Redis.DB
-		
+
 		config.Queue.DefaultVisibilityTimeout = envConfig.Queue.DefaultVisibilityTimeout
 		config.Queue.DefaultMaxRetries = envConfig.Queue.DefaultMaxRetries
 		config.Queue.CleanupInterval = envConfig.Queue.CleanupInterval
 		config.Queue.MaxStreamLength = envConfig.Queue.MaxStreamLength
-		
+
 		config.Observability.MetricsEnabled = envConfig.Observability.PrometheusEnabled
 		config.Observability.TracingEnabled = envConfig.Observability.TracingEnabled
 		config.Observability.JaegerEndpoint = envConfig.Observability.JaegerEndpoint
-		
+
 		config.Logging.Level = envConfig.Logging.Level
 		config.Logging.Format = envConfig.Logging.Format
 	}
