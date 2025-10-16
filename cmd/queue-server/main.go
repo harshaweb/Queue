@@ -16,6 +16,7 @@ import (
 
 	"github.com/harshaweb/Queue/internal/api"
 	"github.com/harshaweb/Queue/internal/auth"
+	"github.com/harshaweb/Queue/internal/config"
 	"github.com/harshaweb/Queue/internal/metrics"
 	"github.com/harshaweb/Queue/pkg/redis"
 )
@@ -395,8 +396,46 @@ func (s *Server) tracingMiddleware() gin.HandlerFunc {
 }
 
 func main() {
+	// Load environment configuration first
+	envConfig, err := config.LoadConfig()
+	if err != nil {
+		log.Printf("Failed to load environment config: %v", err)
+	}
+
+	// Validate configuration
+	if envConfig != nil {
+		if err := envConfig.ValidateConfig(); err != nil {
+			log.Printf("Configuration validation warning: %v", err)
+		}
+		envConfig.Print()
+	}
+
 	// Load configuration
 	config := DefaultConfig()
+
+	// Override with environment values if available
+	if envConfig != nil {
+		config.Server.Port = envConfig.Server.Port
+		config.Server.MetricsPort = envConfig.Server.MetricsPort
+		config.Server.Timeout = envConfig.Server.Timeout
+		config.Server.EnableAuth = envConfig.Server.EnableAuth
+		
+		config.Redis.Addresses = envConfig.Redis.Addresses
+		config.Redis.Password = envConfig.Redis.Password
+		config.Redis.DB = envConfig.Redis.DB
+		
+		config.Queue.DefaultVisibilityTimeout = envConfig.Queue.DefaultVisibilityTimeout
+		config.Queue.DefaultMaxRetries = envConfig.Queue.DefaultMaxRetries
+		config.Queue.CleanupInterval = envConfig.Queue.CleanupInterval
+		config.Queue.MaxStreamLength = envConfig.Queue.MaxStreamLength
+		
+		config.Observability.MetricsEnabled = envConfig.Observability.PrometheusEnabled
+		config.Observability.TracingEnabled = envConfig.Observability.TracingEnabled
+		config.Observability.JaegerEndpoint = envConfig.Observability.JaegerEndpoint
+		
+		config.Logging.Level = envConfig.Logging.Level
+		config.Logging.Format = envConfig.Logging.Format
+	}
 
 	// Load config from file if specified
 	configPath := os.Getenv("CONFIG_PATH")

@@ -1,0 +1,96 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment files (IMPORTANT: Keep .env files secure)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+*.env
+
+# But allow example files
+!.env.example
+
+# Log files
+*.log
+logs/
+/tmp/
+
+# Docker
+docker-compose.override.yml
+
+# Kubernetes secrets
+k8s-secrets/
+
+# Temporary files
+tmp/
+temp/
+
+# Build artifacts
+dist/
+build/
+bin/
+
+# Test coverage
+coverage.out
+coverage.html
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.csr
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.bak
+
+# Configuration files with sensitive data
+config.local.yaml
+config.production.yaml
+secrets.yaml

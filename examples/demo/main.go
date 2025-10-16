@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/harshaweb/Queue/internal/config"
 	"github.com/harshaweb/Queue/pkg/client"
 )
 
@@ -13,11 +14,22 @@ func main() {
 	fmt.Println("🚀 Redis Queue System Demo")
 	fmt.Println("===========================")
 
-	// Create client
-	config := client.DefaultConfig()
-	config.RedisConfig.Addresses = []string{"localhost:6379"}
+	// Load environment configuration
+	envConfig, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Failed to load config: %v", err)
+	}
 
-	queueClient, err := client.NewClient(config)
+	// Print configuration (with secrets masked)
+	envConfig.Print()
+
+	// Create client using environment configuration
+	clientConfig := client.DefaultConfig()
+	clientConfig.RedisConfig.Addresses = envConfig.Redis.Addresses
+	clientConfig.RedisConfig.Password = envConfig.Redis.Password
+	clientConfig.RedisConfig.DB = envConfig.Redis.DB
+
+	queueClient, err := client.NewClient(clientConfig)
 	if err != nil {
 		log.Fatalf("Failed to create queue client: %v", err)
 	}
