@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/queue-system/redis-queue/internal/auth"
-	"github.com/queue-system/redis-queue/pkg/queue"
+	"github.com/harshaweb/Queue/internal/auth"
+	"github.com/harshaweb/Queue/pkg/queue"
 )
 
 // RestAPI provides REST endpoints for the queue system

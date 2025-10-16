@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/queue-system/redis-queue/pkg/client"
+	"github.com/harshaweb/Queue/pkg/client"
 	"github.com/spf13/cobra"
 )
 

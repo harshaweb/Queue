@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/queue-system/redis-queue/pkg/queue"
-	"github.com/queue-system/redis-queue/pkg/redis"
+	"github.com/harshaweb/Queue/pkg/queue"
+	"github.com/harshaweb/Queue/pkg/redis"
 )
 
 // Client is the main client for the queue system

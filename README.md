@@ -43,13 +43,13 @@ A **production-ready, high-performance message queueing system** built on Redis 
 
 ```bash
 go mod init your-app
-go get github.com/queue-system/redis-queue/pkg/client
+go get github.com/harshaweb/Queue/pkg/client
 ```
 
 ### From Source
 
 ```bash
-git clone https://github.com/queue-system/redis-queue.git
+git clone https://github.com/harshaweb/Queue.git
 cd redis-queue
 go mod download
 ```
@@ -122,7 +122,7 @@ import (
     "log"
     "time"
 
-    "github.com/queue-system/redis-queue/pkg/client"
+    "github.com/harshaweb/Queue/pkg/client"
 )
 
 func main() {
@@ -428,7 +428,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for deta
 ### Development Setup
 ```bash
 # Clone repository
-git clone https://github.com/queue-system/redis-queue.git
+git clone https://github.com/harshaweb/Queue.git
 cd redis-queue
 
 # Install dependencies
@@ -451,8 +451,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 - **Documentation**: Full docs at [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/queue-system/redis-queue/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/queue-system/redis-queue/discussions)
+- **Issues**: [GitHub Issues](https://github.com/harshaweb/Queue/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/harshaweb/Queue/discussions)
 - **Discord**: [Join our Discord](https://discord.gg/queue-system)
 
 ## 🏆 Acknowledgments

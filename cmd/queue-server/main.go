@@ -14,10 +14,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/viper"
 
-	"github.com/queue-system/redis-queue/internal/api"
-	"github.com/queue-system/redis-queue/internal/auth"
-	"github.com/queue-system/redis-queue/internal/metrics"
-	"github.com/queue-system/redis-queue/pkg/redis"
+	"github.com/harshaweb/Queue/internal/api"
+	"github.com/harshaweb/Queue/internal/auth"
+	"github.com/harshaweb/Queue/internal/metrics"
+	"github.com/harshaweb/Queue/pkg/redis"
 )
 
 // Config represents the server configuration

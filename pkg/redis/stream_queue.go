@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/queue-system/redis-queue/pkg/queue"
+	"github.com/harshaweb/Queue/pkg/queue"
 )
 
 // StreamQueue implements the Queue interface using Redis Streams

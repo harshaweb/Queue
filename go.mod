@@ -1,4 +1,4 @@
-module github.com/queue-system/redis-queue
+module github.com/harshaweb/Queue
 
 go 1.21
 

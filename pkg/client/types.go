@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/queue-system/redis-queue/pkg/queue"
+	"github.com/harshaweb/Queue/pkg/queue"
 )
 
 // MessageHandler processes a received message

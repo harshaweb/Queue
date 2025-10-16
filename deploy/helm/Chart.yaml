@@ -9,9 +9,9 @@ keywords:
   - redis
   - messaging
   - microservices
-home: https://github.com/queue-system/redis-queue
+home: https://github.com/harshaweb/Queue
 sources:
-  - https://github.com/queue-system/redis-queue
+  - https://github.com/harshaweb/Queue
 maintainers:
   - name: Queue System Team
     email: team@queue-system.com

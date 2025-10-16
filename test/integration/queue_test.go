@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/queue-system/redis-queue/pkg/client"
+	"github.com/harshaweb/Queue/pkg/client"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

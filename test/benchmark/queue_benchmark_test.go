@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/queue-system/redis-queue/pkg/client"
+	"github.com/harshaweb/Queue/pkg/client"
 	"github.com/stretchr/testify/require"
 )
 

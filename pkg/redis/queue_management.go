@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/queue-system/redis-queue/pkg/queue"
+	"github.com/harshaweb/Queue/pkg/queue"
 )
 
 // CreateQueue creates a new queue with the given configuration

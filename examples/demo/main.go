@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/queue-system/redis-queue/pkg/client"
+	"github.com/harshaweb/Queue/pkg/client"
 )
 
 func main() {

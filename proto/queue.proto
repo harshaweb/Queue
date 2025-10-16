@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package queue.v1;
 
-option go_package = "github.com/queue-system/redis-queue/proto/queue/v1";
+option go_package = "github.com/harshaweb/Queue/proto/queue/v1";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
