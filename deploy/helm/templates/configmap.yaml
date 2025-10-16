@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "redis-queue.fullname" . }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "redis-queue.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  config.yaml: |
+    server:
+      port: {{ .Values.config.server.port }}
+      metrics_port: {{ .Values.config.server.metricsPort }}
+      timeout: {{ .Values.config.server.timeout }}
+      enable_auth: {{ .Values.config.server.enableAuth }}
+    
+    redis:
+      addresses:
+        - {{ include "redis-queue.redisHost" . }}:{{ include "redis-queue.redisPort" . }}
+      {{- if .Values.redis.auth.enabled }}
+      password: "${REDIS_PASSWORD}"
+      {{- end }}
+      db: 0
+      pool_size: 20
+      min_idle_conns: 5
+      max_retries: 3
+      dial_timeout: 5s
+      read_timeout: 3s
+      write_timeout: 3s
+      pool_timeout: 4s
+      idle_timeout: 5m
+      {{- if .Values.redis.sentinel.enabled }}
+      sentinel_mode: true
+      master_name: {{ .Values.redis.sentinel.masterSet }}
+      {{- end }}
+    
+    queue:
+      default_visibility_timeout: {{ .Values.config.queue.defaultVisibilityTimeout }}
+      default_max_retries: {{ .Values.config.queue.defaultMaxRetries }}
+      cleanup_interval: {{ .Values.config.queue.cleanupInterval }}
+      max_stream_length: {{ .Values.config.queue.maxStreamLength }}
+      consumer_timeout: {{ .Values.config.queue.consumerTimeout }}
+    
+    observability:
+      metrics_enabled: {{ .Values.config.observability.metricsEnabled }}
+      tracing_enabled: {{ .Values.config.observability.tracingEnabled }}
+      jaeger_endpoint: {{ .Values.config.observability.jaegerEndpoint }}
+    
+    logging:
+      level: {{ .Values.config.logging.level }}
+      format: {{ .Values.config.logging.format }}

@@ -1,0 +1,24 @@
+apiVersion: v2
+name: redis-queue
+description: A production-ready Redis-backed queueing system for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - queue
+  - redis
+  - messaging
+  - microservices
+home: https://github.com/queue-system/redis-queue
+sources:
+  - https://github.com/queue-system/redis-queue
+maintainers:
+  - name: Queue System Team
+    email: team@queue-system.com
+dependencies:
+  - name: redis
+    version: "^17.0.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled
+annotations:
+  category: Infrastructure

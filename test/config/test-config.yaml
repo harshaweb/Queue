@@ -1,0 +1,328 @@
+# Test Configuration for Queue System
+
+## Environment Configuration
+
+### Redis Configuration for Tests
+redis:
+  # Test Redis instances
+  test_db: 1           # Unit and integration tests
+  benchmark_db: 2      # Benchmark tests  
+  chaos_db: 3          # Chaos tests
+  host: "localhost"
+  port: 6379
+  password: ""
+  
+  # Connection settings
+  pool_size: 20
+  min_idle_conns: 5
+  max_retries: 3
+  retry_delay: "100ms"
+  
+  # Test-specific timeouts
+  dial_timeout: "5s"
+  read_timeout: "3s"
+  write_timeout: "3s"
+
+## Unit Test Configuration
+unit_tests:
+  timeout: "10m"
+  parallel: true
+  race_detection: true
+  coverage_threshold: 80.0  # Minimum coverage percentage
+  
+  # Mock configurations
+  mocks:
+    redis_failures: false
+    network_latency: "0ms"
+
+## Integration Test Configuration  
+integration_tests:
+  timeout: "20m"
+  parallel: false  # Sequential to avoid Redis conflicts
+  
+  # Test scenarios
+  scenarios:
+    - name: "basic_operations"
+      description: "Test basic enqueue/dequeue operations"
+      message_count: 1000
+      concurrency: 5
+      
+    - name: "batch_operations"
+      description: "Test batch enqueue/dequeue"
+      batch_sizes: [10, 50, 100]
+      message_count: 1000
+      
+    - name: "scheduled_messages"
+      description: "Test message scheduling"
+      delays: ["1s", "5s", "30s", "1m"]
+      message_count: 100
+      
+    - name: "retry_mechanism"  
+      description: "Test message retry behavior"
+      max_retries: 3
+      failure_rate: 0.5
+      message_count: 200
+      
+    - name: "concurrent_consumers"
+      description: "Test multiple concurrent consumers"
+      consumer_count: 5
+      message_count: 1000
+      processing_time: "10ms"
+
+## Benchmark Test Configuration
+benchmark_tests:
+  timeout: "30m"
+  
+  # Performance targets
+  targets:
+    enqueue_rate: 10000    # messages/second
+    dequeue_rate: 8000     # messages/second
+    max_latency: "100ms"   # 95th percentile
+    memory_usage: "500MB"  # max memory per test
+  
+  # Benchmark scenarios
+  scenarios:
+    - name: "single_producer_consumer"
+      producers: 1
+      consumers: 1
+      duration: "2m"
+      message_rate: "10ms"
+      
+    - name: "high_throughput"
+      producers: 10
+      consumers: 10  
+      duration: "5m"
+      message_rate: "1ms"
+      
+    - name: "large_payloads"
+      payload_sizes: ["1KB", "10KB", "100KB", "1MB"]
+      duration: "2m"
+      
+    - name: "batch_performance"
+      batch_sizes: [1, 10, 50, 100, 500]
+      duration: "2m"
+
+## Chaos Test Configuration
+chaos_tests:
+  timeout: "60m"
+  
+  # Chaos parameters
+  chaos:
+    failure_rate: 0.1      # 10% random failure rate
+    network_latency: "50ms" # Simulated network delays
+    consumer_restart_interval: "30s"
+    producer_failure_rate: 0.05
+    consumer_failure_rate: 0.05
+  
+  # Chaos scenarios
+  scenarios:
+    - name: "basic_chaos"
+      duration: "2m"
+      producers: 5
+      consumers: 3
+      message_rate: "100ms"
+      
+    - name: "high_load_chaos"
+      duration: "3m"
+      producers: 20
+      consumers: 15
+      message_rate: "10ms"
+      
+    - name: "network_partition"
+      duration: "5m"
+      network_failure_rate: 0.2
+      partition_duration: "30s"
+      
+    - name: "consumer_restart"
+      duration: "3m"
+      restart_count: 5
+      restart_interval: "30s"
+      
+    - name: "message_ordering"
+      duration: "2m"
+      message_count: 1000
+      consumers: 3
+      ordering_check: true
+
+## Coverage Configuration
+coverage:
+  threshold: 80.0           # Minimum coverage percentage
+  exclude_paths:
+    - "test/"
+    - "vendor/"
+    - "examples/"
+    - "cmd/"                # Exclude CLI apps from coverage
+  
+  # Coverage targets by package
+  package_targets:
+    "pkg/queue": 90.0
+    "pkg/redis": 85.0  
+    "pkg/client": 85.0
+    "internal/api": 75.0
+    "internal/auth": 80.0
+    "internal/metrics": 70.0
+
+## Load Test Configuration
+load_tests:
+  # Stress test scenarios
+  stress:
+    max_producers: 50
+    max_consumers: 30
+    ramp_up_time: "2m"
+    steady_state: "5m"
+    ramp_down_time: "1m"
+    
+  # Volume tests
+  volume:
+    message_counts: [10000, 100000, 1000000]
+    batch_sizes: [1, 10, 100]
+    queue_counts: [1, 5, 10]
+    
+  # Endurance tests
+  endurance:
+    duration: "24h"         # Long-running test
+    producers: 5
+    consumers: 5
+    message_rate: "1s"
+    health_check_interval: "1m"
+
+## Error Simulation Configuration
+error_simulation:
+  # Redis failures
+  redis:
+    connection_failures: true
+    timeout_errors: true
+    memory_errors: true
+    
+  # Network issues
+  network:
+    packet_loss: 0.01       # 1% packet loss
+    latency_spikes: true
+    connection_resets: true
+    
+  # Application errors
+  application:
+    panic_recovery: true
+    memory_leaks: false
+    goroutine_leaks: false
+
+## Test Data Configuration
+test_data:
+  # Message payload templates
+  payloads:
+    small:
+      size: "1KB"
+      template: '{"id": {{.ID}}, "data": "{{.Data}}"}'
+      
+    medium:
+      size: "10KB" 
+      template: '{"id": {{.ID}}, "payload": "{{.LargeData}}"}'
+      
+    large:
+      size: "100KB"
+      template: '{"id": {{.ID}}, "blob": "{{.Blob}}"}'
+  
+  # Queue configurations for testing
+  queues:
+    - name: "test-queue-fast"
+      visibility_timeout: "10s"
+      max_retries: 3
+      
+    - name: "test-queue-slow" 
+      visibility_timeout: "60s"
+      max_retries: 5
+      
+    - name: "test-queue-dlq"
+      visibility_timeout: "30s"
+      max_retries: 1
+      dead_letter_queue: "test-dlq"
+
+## Reporting Configuration
+reporting:
+  # Output formats
+  formats: ["json", "junit", "html"]
+  
+  # Report destinations
+  outputs:
+    console: true
+    file: true
+    html: "test-results.html"
+    json: "test-results.json" 
+    junit: "test-results.xml"
+    
+  # Metrics to include
+  metrics:
+    - "test_duration"
+    - "memory_usage"
+    - "cpu_usage"  
+    - "goroutine_count"
+    - "message_throughput"
+    - "error_rates"
+    - "latency_percentiles"
+
+## CI/CD Integration
+ci_cd:
+  # Pipeline stages
+  stages:
+    - "lint"
+    - "unit"
+    - "integration"
+    - "benchmark"
+    - "security"
+    
+  # Parallel execution
+  parallel:
+    unit_tests: true
+    integration_tests: false
+    benchmark_tests: false
+    
+  # Failure handling
+  fast_fail: true
+  retry_count: 2
+  
+  # Artifacts
+  artifacts:
+    - "test-results.xml"
+    - "coverage.html"
+    - "benchmark-results.json"
+    - "test-report.md"
+
+## Security Test Configuration  
+security_tests:
+  # Authentication tests
+  auth:
+    invalid_tokens: true
+    expired_tokens: true
+    privilege_escalation: true
+    
+  # Input validation
+  validation:
+    sql_injection: false    # Not applicable for Redis
+    xss_attacks: false      # Not applicable for API
+    buffer_overflows: true
+    malformed_payloads: true
+    
+  # Rate limiting
+  rate_limiting:
+    burst_tests: true
+    sustained_load: true
+    
+## Monitoring During Tests
+monitoring:
+  # Metrics collection
+  metrics:
+    enabled: true
+    interval: "10s"
+    
+  # Health checks
+  health_checks:
+    redis: true
+    application: true
+    memory: true
+    
+  # Alerting thresholds
+  alerts:
+    memory_usage: "80%"
+    cpu_usage: "90%"
+    error_rate: "5%"
+    response_time: "1s"
