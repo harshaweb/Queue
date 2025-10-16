@@ -1,0 +1,153 @@
+version: '3.8'
+
+services:
+  # Redis Queue System Server
+  queue-server:
+    image: ghcr.io/harshaweb/queue:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+        VERSION: ${VERSION:-dev}
+    container_name: queue-server
+    ports:
+      - "8080:8080"     # HTTP API
+      - "9090:9090"     # gRPC API  
+      - "2112:2112"     # Prometheus metrics
+    environment:
+      # Redis Configuration
+      - REDIS_ADDRESSES=redis:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=0
+      
+      # Server Configuration
+      - SERVER_PORT=8080
+      - SERVER_METRICS_PORT=9090
+      - SERVER_GRPC_PORT=9090
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      
+      # Security
+      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-in-production-32-chars}
+      - API_KEYS=${API_KEYS:-admin-key:admin,user-key:user}
+      
+      # Monitoring
+      - PROMETHEUS_ENABLED=true
+      - PROMETHEUS_PORT=2112
+      - TRACING_ENABLED=${TRACING_ENABLED:-false}
+      
+      # Queue Settings
+      - DEFAULT_VISIBILITY_TIMEOUT=30s
+      - DEFAULT_MAX_RETRIES=3
+      - MAX_MESSAGE_SIZE=1MB
+      
+      # Environment
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - queue_logs:/app/logs
+      - queue_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - queue-network
+
+  # Redis Database
+  redis:
+    image: redis:7-alpine
+    container_name: redis-queue
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    networks:
+      - queue-network
+
+  # Prometheus (for metrics collection)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-queue
+    ports:
+      - "9091:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./deploy/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+    networks:
+      - queue-network
+    profiles:
+      - monitoring
+
+  # Grafana (for dashboards)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-queue
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_USER=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deploy/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./deploy/monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    restart: unless-stopped
+    networks:
+      - queue-network
+    profiles:
+      - monitoring
+
+  # Jaeger (for distributed tracing)
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger-queue
+    ports:
+      - "16686:16686"   # Jaeger UI
+      - "14268:14268"   # Jaeger HTTP receiver
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    restart: unless-stopped
+    networks:
+      - queue-network
+    profiles:
+      - monitoring
+
+volumes:
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  queue_logs:
+    driver: local
+  queue_data:
+    driver: local
+
+networks:
+  queue-network:
+    driver: bridge
+    name: queue-network

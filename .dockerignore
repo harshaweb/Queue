@@ -1,0 +1,96 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build artifacts (keep source, exclude build outputs)
+dist/
+build/
+bin/
+*.exe
+
+# Test files and coverage
+*_test.go
+*.test
+*.out
+coverage.html
+test/
+tests/
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+
+# Docker files (don't copy into image)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Kubernetes files
+deploy/k8s/
+k8s/
+*.yaml
+*.yml
+
+# Scripts (we don't need them in the image)
+scripts/
+
+# Examples (not needed in production image)
+examples/
+
+# Development files
+Makefile
+.golangci.yml
+
+# Node modules (if any)
+node_modules/
+
+# Archives
+*.tar
+*.tar.gz
+*.zip
+
+# Certificates and keys (should be mounted as secrets)
+*.pem
+*.key
+*.crt
+*.csr
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.bak
