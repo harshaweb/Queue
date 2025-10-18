@@ -91,7 +91,7 @@ func testBasicQueue(ctx context.Context) error {
 
 	// Test sending messages
 	fmt.Println("  📤 Sending test messages...")
-	
+
 	messages := []map[string]interface{}{
 		{
 			"id":        "msg-1",
@@ -99,7 +99,7 @@ func testBasicQueue(ctx context.Context) error {
 			"timestamp": time.Now(),
 		},
 		{
-			"id":        "msg-2", 
+			"id":        "msg-2",
 			"content":   "Test Message",
 			"timestamp": time.Now(),
 		},
@@ -240,10 +240,10 @@ func testCircuitBreaker(ctx context.Context) error {
 	fmt.Println("\n⚡ Testing Circuit Breaker...")
 
 	cbConfig := pkg.CircuitBreakerConfig{
-		Name:              "test-service",
-		MaxFailures:       3,
-		ResetTimeout:      5 * time.Second,
-		SuccessThreshold:  2,
+		Name:             "test-service",
+		MaxFailures:      3,
+		ResetTimeout:     5 * time.Second,
+		SuccessThreshold: 2,
 	}
 
 	cb := pkg.NewCircuitBreaker(cbConfig)
@@ -347,8 +347,8 @@ func testEncryption(ctx context.Context) error {
 	// Test encrypting and decrypting messages
 	sensitiveData := map[string]interface{}{
 		"credit_card": "4111-1111-1111-1111",
-		"ssn":        "123-45-6789",
-		"password":   "super-secret-password",
+		"ssn":         "123-45-6789",
+		"password":    "super-secret-password",
 	}
 
 	fmt.Println("  🔐 Sending encrypted message...")
@@ -420,7 +420,7 @@ func testMetrics(ctx context.Context) error {
 	for i := 0; i < 5; i++ {
 		data := map[string]interface{}{
 			"metric_test": i,
-			"timestamp":  time.Now(),
+			"timestamp":   time.Now(),
 		}
 		_, err := queue.Send(data, nil)
 		if err != nil {

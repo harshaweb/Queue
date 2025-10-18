@@ -34,7 +34,7 @@ func main() {
 	// Create queue for notifications
 	config := pkg.DefaultConfig()
 	config.RedisAddress = "localhost:6379"
-	
+
 	q, err := pkg.NewQueue("notifications", config)
 	if err != nil {
 		log.Fatal("Failed to create queue:", err)

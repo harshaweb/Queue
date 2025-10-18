@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/harshaweb/!queue/pkg/queue"
 	"github.com/harshaweb/queue/pkg"
 )
 

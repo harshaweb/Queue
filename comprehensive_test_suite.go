@@ -119,9 +119,9 @@ func main() {
 
 	// Final Results
 	fmt.Println("\n" + strings.Repeat("=", 50))
-	fmt.Printf("🎯 TEST RESULTS: %d/%d tests passed (%.1f%%)\n", 
+	fmt.Printf("🎯 TEST RESULTS: %d/%d tests passed (%.1f%%)\n",
 		passedTests, totalTests, float64(passedTests)/float64(totalTests)*100)
-	
+
 	if passedTests == totalTests {
 		fmt.Println("🎉 ALL TESTS PASSED! Queue system is fully functional.")
 	} else {
@@ -148,8 +148,8 @@ func testBasicOperations() bool {
 
 	// Test sending messages
 	testData := map[string]interface{}{
-		"message": "test basic operations",
-		"number":  123,
+		"message":   "test basic operations",
+		"number":    123,
 		"timestamp": time.Now(),
 	}
 
@@ -169,7 +169,7 @@ func testBasicOperations() bool {
 	consumer := func(ctx context.Context, msg *pkg.Message) error {
 		mu.Lock()
 		defer mu.Unlock()
-		
+
 		if !received {
 			fmt.Printf("  📥 Received message: %+v\n", msg.Payload)
 			received = true
@@ -179,11 +179,11 @@ func testBasicOperations() bool {
 	}
 
 	wg.Add(1)
-	
+
 	// Start consumer in background
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	go func() {
 		if err := queue.Consume(consumer, nil); err != nil && err != context.Canceled {
 			fmt.Printf("  ❌ Consume error: %v\n", err)

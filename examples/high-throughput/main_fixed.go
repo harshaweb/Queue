@@ -141,10 +141,10 @@ func main() {
 	// Final metrics
 	fmt.Println("\n📈 Final Performance Metrics")
 	fmt.Println("============================")
-	
+
 	totalDuration := time.Since(startTime)
 	processedCount := atomic.LoadInt64(&messagesReceived)
-	
+
 	fmt.Printf("📤 Messages Sent: %d\n", messagesSent)
 	fmt.Printf("📥 Messages Processed: %d\n", processedCount)
 	fmt.Printf("⏱️  Total Time: %v\n", totalDuration)

@@ -68,7 +68,7 @@ func main() {
 			"currency": payment.Currency,
 			"method":   payment.Method,
 		}
-		
+
 		id, err := q.Send(paymentData, nil)
 		if err != nil {
 			log.Printf("Failed to submit payment %s: %v", payment.ID, err)
