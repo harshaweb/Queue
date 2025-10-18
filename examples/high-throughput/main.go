@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	queue "github.com/harshaweb/Queue"
+	"github.com/harshaweb/queue/pkg"
 )
 
 func main() {
@@ -15,28 +15,20 @@ func main() {
 	fmt.Println("===================================")
 
 	// Configuration for high throughput
-	config := &queue.Config{
-		RedisAddress:      "localhost:6379",
-		DefaultTimeout:    30 * time.Second,
-		DefaultMaxRetries: 3,
-		BatchSize:         100, // Process 100 messages at once
-	}
+	config := pkg.DefaultConfig()
+	config.RedisAddress = "localhost:6379"
+	config.MaxRetries = 3
+	config.BatchSize = 100 // Process messages in batches
+	config.EnableMetrics = true
 
-	// Create worker pool with 10 concurrent workers
-	pool, err := queue.NewWorkerPool("high-throughput", 10, config)
+	// Create queue
+	q, err := pkg.NewQueue("high-throughput", config)
 	if err != nil {
-		log.Fatal("Failed to create worker pool:", err)
+		log.Fatal("Failed to create queue:", err)
 	}
-	defer pool.Stop()
+	defer q.Close()
 
-	fmt.Println("✅ Worker pool created with 10 workers")
-
-	// Create a separate queue instance for sending messages
-	sender, err := queue.New("high-throughput", config)
-	if err != nil {
-		log.Fatal("Failed to create sender queue:", err)
-	}
-	defer sender.Close()
+	fmt.Println("✅ High-throughput queue created")
 
 	// Send a batch of messages
 	fmt.Println("📤 Sending batch of messages...")

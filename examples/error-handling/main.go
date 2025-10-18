@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"time"
 
-	queue "github.com/harshaweb/Queue"
+	"github.com/harshaweb/queue/pkg"
 )
 
 // PaymentRequest represents a payment to process
@@ -33,14 +33,14 @@ func main() {
 	fmt.Println("=========================================")
 
 	// Create queue with custom retry configuration
-	config := &queue.Config{
-		RedisAddress:      "localhost:6379",
-		DefaultTimeout:    30 * time.Second,
-		DefaultMaxRetries: 5, // Retry up to 5 times
-		BatchSize:         10,
-	}
+	config := pkg.DefaultConfig()
+	config.RedisAddress = "localhost:6379"
+	config.MaxRetries = 5 // Retry up to 5 times
+	config.RetryDelay = time.Second
+	config.EnableDLQ = true
+	config.DLQName = "payment-failures"
 
-	q, err := queue.New("payments", config)
+	q, err := pkg.NewQueue("payments", config)
 	if err != nil {
 		log.Fatal("Failed to create queue:", err)
 	}
@@ -60,7 +60,16 @@ func main() {
 	}
 
 	for _, payment := range payments {
-		id, err := q.SendJSON(payment)
+		// Convert struct to map for sending
+		paymentData := map[string]interface{}{
+			"id":       payment.ID,
+			"user_id":  payment.UserID,
+			"amount":   payment.Amount,
+			"currency": payment.Currency,
+			"method":   payment.Method,
+		}
+		
+		id, err := q.Send(paymentData, nil)
 		if err != nil {
 			log.Printf("Failed to submit payment %s: %v", payment.ID, err)
 			continue
@@ -75,7 +84,7 @@ func main() {
 	processedCount := 0
 	failedCount := 0
 
-	err = q.Receive(func(ctx context.Context, msg *queue.Message) error {
+	handler := func(ctx context.Context, msg *pkg.Message) error {
 		// Parse payment request
 		paymentID := msg.Payload["id"].(string)
 		userID := int(msg.Payload["user_id"].(float64))
@@ -110,15 +119,17 @@ func main() {
 		fmt.Printf("✅ Payment %s processed successfully (Total processed: %d)\n", paymentID, processedCount)
 
 		return nil
-
-	}, &queue.ReceiveOptions{
-		MaxConcurrency: 2,     // Process 2 payments concurrently
-		AutoAck:        false, // Manual ack so we can handle errors properly
-	})
-
-	if err != nil {
-		log.Fatal("Error in payment processing:", err)
 	}
+
+	// Start consuming messages
+	go func() {
+		if err := q.Consume(handler, nil); err != nil {
+			log.Printf("Error in payment processing: %v", err)
+		}
+	}()
+
+	// Let it run for a while to process messages
+	time.Sleep(30 * time.Second)
 }
 
 func simulatePaymentProcessing(paymentID string, amount float64, method string) error {

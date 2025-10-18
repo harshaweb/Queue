@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	queue "github.com/harshaweb/Queue"
+	"github.com/harshaweb/queue/pkg"
 )
 
 // User represents a user in our system
@@ -32,7 +32,10 @@ func main() {
 	fmt.Println("====================================")
 
 	// Create queue for notifications
-	q, err := queue.New("notifications")
+	config := pkg.DefaultConfig()
+	config.RedisAddress = "localhost:6379"
+	
+	q, err := pkg.NewQueue("notifications", config)
 	if err != nil {
 		log.Fatal("Failed to create queue:", err)
 	}

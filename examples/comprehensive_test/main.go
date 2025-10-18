@@ -145,8 +145,20 @@ func testBasicQueue(ctx context.Context) error {
 
 	consumer := func(ctx context.Context, message *pkg.Message) error {
 		var msg TestMessage
-		if err := json.Unmarshal(message.Payload.([]byte), &msg); err != nil {
-			return err
+		// Handle both byte array and map[string]interface{} payload types
+		switch payload := message.Payload.(type) {
+		case []byte:
+			if err := json.Unmarshal(payload, &msg); err != nil {
+				return err
+			}
+		case map[string]interface{}:
+			// Convert map to JSON then unmarshal to struct
+			jsonData, _ := json.Marshal(payload)
+			if err := json.Unmarshal(jsonData, &msg); err != nil {
+				return err
+			}
+		default:
+			return fmt.Errorf("unsupported payload type: %T", payload)
 		}
 
 		fmt.Printf("  📨 Received: %s - %s\n", msg.ID, msg.Content)
